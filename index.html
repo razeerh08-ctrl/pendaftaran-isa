@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ISA Elite Portal</title>
+
+<style>
+body{
+  margin:0;
+  font-family:'Segoe UI',sans-serif;
+  background:radial-gradient(circle at top,#0f0f1a,#000 70%);
+  overflow:hidden;
+  color:white;
+}
+
+/* Galaxy */
+.galaxy{
+  position:fixed;
+  width:200%;
+  height:200%;
+  top:-50%;
+  left:-50%;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(0,255,255,0.15), transparent 40%),
+    radial-gradient(circle at 70% 70%, rgba(255,0,255,0.15), transparent 40%);
+  animation:moveGalaxy 40s infinite alternate;
+  z-index:-2;
+}
+@keyframes moveGalaxy{
+  from{transform:translate(0,0);}
+  to{transform:translate(200px,150px);}
+}
+
+/* Particles */
+.particle{
+  position:absolute;
+  width:3px;height:3px;
+  background:#00ffff;
+  border-radius:50%;
+  box-shadow:0 0 10px #00ffff;
+  animation:float linear infinite;
+}
+@keyframes float{
+  from{transform:translateY(100vh);}
+  to{transform:translateY(-10vh);}
+}
+
+/* Form Glass */
+.container{
+  max-width:450px;
+  margin:80px auto;
+  padding:30px;
+  background:rgba(255,255,255,0.05);
+  border-radius:20px;
+  backdrop-filter:blur(20px);
+  border:1px solid rgba(0,255,255,0.3);
+  box-shadow:0 0 30px rgba(0,255,255,0.3);
+  text-align:center;
+}
+
+h2{
+  text-shadow:0 0 10px #00ffff;
+}
+
+input,textarea,select{
+  width:100%;
+  padding:10px;
+  margin:10px 0;
+  border-radius:10px;
+  border:none;
+  background:rgba(255,255,255,0.08);
+  color:white;
+}
+
+button{
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:10px;
+  font-weight:bold;
+  cursor:pointer;
+  background:linear-gradient(45deg,#00ffff,#ff00ff);
+  color:black;
+  box-shadow:0 0 20px #00ffff;
+  transition:0.3s;
+}
+
+button:hover{
+  transform:scale(1.05);
+  box-shadow:0 0 40px #ff00ff;
+}
+
+/* Loading Spinner */
+.spinner{
+  display:none;
+  margin-top:15px;
+  border:4px solid rgba(255,255,255,0.2);
+  border-top:4px solid #00ffff;
+  border-radius:50%;
+  width:30px;
+  height:30px;
+  animation:spin 1s linear infinite;
+}
+@keyframes spin{
+  100%{transform:rotate(360deg);}
+}
+</style>
+</head>
+<body>
+
+<div class="galaxy"></div>
+
+<script>
+for(let i=0;i<60;i++){
+  const p=document.createElement("div");
+  p.className="particle";
+  p.style.left=Math.random()*100+"vw";
+  p.style.animationDuration=(5+Math.random()*10)+"s";
+  document.body.appendChild(p);
+}
+</script>
+
+<div class="container">
+<h2>ISA Registration</h2>
+
+<form id="formISA">
+<input type="text" id="nama" placeholder="Nama" required>
+<input type="number" id="umur" placeholder="Umur" required>
+<input type="text" id="asal" placeholder="Asal" required>
+<select id="status" required>
+<option value="">Pilih Status</option>
+<option>Pelajar</option>
+<option>Mahasiswa</option>
+<option>Pekerja</option>
+<option>Lainnya</option>
+</select>
+<textarea id="alasan" placeholder="Alasan masuk ISA" required></textarea>
+
+<button type="submit" id="submitBtn">Daftar Sekarang</button>
+<div class="spinner" id="loading"></div>
+</form>
+</div>
+
+<audio id="clickSound">
+<source src="https://assets.mixkit.co/sfx/preview/mixkit-modern-technology-select-3124.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+const WA_NUMBER="6289654672195";
+const form=document.getElementById("formISA");
+const loading=document.getElementById("loading");
+const btn=document.getElementById("submitBtn");
+const sound=document.getElementById("clickSound");
+
+form.addEventListener("submit",function(e){
+e.preventDefault();
+
+sound.play();
+btn.disabled=true;
+btn.innerText="Mengirim...";
+loading.style.display="block";
+
+setTimeout(()=>{
+const nama=document.getElementById("nama").value;
+const umur=document.getElementById("umur").value;
+const asal=document.getElementById("asal").value;
+const status=document.getElementById("status").value;
+const alasan=document.getElementById("alasan").value;
+
+const message=
+`Halo admin ISA, saya mau mendaftar menjadi anggota ISA. Nih formulir saya:
+
+Nama: ${nama}
+Umur: ${umur}
+Asal: ${asal}
+Status: ${status}
+Alasan masuk ISA: ${alasan}`;
+
+const url=`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(message)}`;
+window.open(url,"_blank");
+
+btn.disabled=false;
+btn.innerText="Daftar Sekarang";
+loading.style.display="none";
+
+},1500);
+});
+</script>
+
+</body>
+</html>
